@@ -35,6 +35,34 @@ dccpentlmcrf:
 #			--label_map_path data/label_map_data_ratio0.6_multitoken_top6.json
 #			--label_map_path data/label_map_handmaded_multitoken_top6.json
 
+# ------ nlp2promela -----
+cleanTemporary:
+	- rm -rf TEMPORARY*
+
+clean:
+	- rm *.trail
+	- rm *.pml
+	- rm *.png
+	- rm -rf out
+	- rm -rf net-rem-*
+	- rm _spin_nvr.tmp
+	- rm *tmp*
+	- rm pan*
+	- rm ._n_i_p_s_
+	make cleanTemporary
+	- rm dot.*
+
+.PHONY: nlp2promela
+
+tcpbert2promela:
+	python3 nlp2promela/nlp2promela.py rfcs-predicted/bert_pretrained_rfcs_crf_phrases_feats/TCP.xml
+	make cleanTemporary
+
+dccpbert2promela:
+	python3 nlp2promela/nlp2promela.py rfcs-predicted/bert_pretrained_rfcs_crf_phrases_feats/DCCP.xml
+	make cleanTemporary
+
+# ----- other protocols-----
 bgpv4entlmcrf:
 	python3 models/entlm_crf_rfc.py                        			\
 			--features                                                      \
@@ -340,6 +368,8 @@ sctpberttrain:
 			--cuda_device 3 \
 			--template_num 3 \
 		  	--template_id 0
+
+
 # --------- original rfcnlp --------------
 obgpv4berttrain:
 	python3 models/bert_bilstm_crf.py                           \
